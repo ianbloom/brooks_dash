@@ -2,7 +2,7 @@ from api_helpers.lm_api import *
 
 # These functions occur a logical level higher than those in lm_api
 
-def SUBGROUP_GETTER(_lm_id, _lm_key, _lm_account, _group_id):
+def SUBGROUP_GETTER_ID(_lm_id, _lm_key, _lm_account, _group_id):
     # GETS subgroup and returns full path
     # Build HTTP query
     resource_path = f'/device/groups/{_group_id}'
@@ -21,6 +21,101 @@ def SUBGROUP_GETTER(_lm_id, _lm_key, _lm_account, _group_id):
     return_dict['path'] = group_full_path
 
     return return_dict
+
+def SUBGROUP_GETTER_NAME(_lm_id, _lm_key, _lm_account, _name):
+    # GETS subgroup and returns id
+    # Build HTTP query
+    resource_path = '/device/groups'
+    query_params  = f'?filter=name:"{_name}"'
+    data          = ''
+
+    # Obtain response
+    response_dict = LM_GET(_lm_id, _lm_key, _lm_account, resource_path, query_params, data)
+    body = json.loads(response_dict['body'])
+    code = response_dict['code']
+
+    if(code != 200):
+        print(f'Failed to obtain "{_name}" device group, check credentials')
+
+    return_dict = {}
+    return_dict['body'] = body
+    return_dict['code'] = code
+
+    return return_dict
+
+def SUBGROUP_POSTER_NAME(_lm_id, _lm_key, _lm_account, _name):
+    # POST subgroup with the _name
+    # Build HTTP query
+    resource_path = '/device/groups'
+    query_params  = ''
+
+    # Build data dictionary to be converted to JSON string
+    data_dict                = {}
+    data_dict['groupType']   = 'Normal'
+    data_dict['description'] = 'Devices organized by device type'
+    data_dict['parentId']    = '1'
+    data_dict['name']        = _name
+
+    # Convert to JSON string
+    data = json.dumps(data_dict)
+
+    # Obtain response
+    response_dict = LM_POST(_lm_id, _lm_key, _lm_account, resource_path, query_params, data)
+    body = json.loads(response_dict['body'])
+    code = response_dict['code']
+
+    if(code != 200):
+        print(f'Failed to instantiate "{_name}" device group, check credentials')
+
+    return_dict = {}
+    return_dict['body'] = body
+    return_dict['code'] = code
+
+    return return_dict
+
+def SUBGROUP_PROPS(_lm_id, _lm_key, _lm_account, _group_id):
+    # POST subgroup with the _name
+    # Build HTTP query
+    resource_path = f'/device/groups/{_group_id}/properties'
+    query_params  = ''
+
+    # Build data dictionary to be converted to JSON string
+    data_dict                = {}
+    data_dict['inheritList'] = []
+    data_dict['type']        = 'custom'
+    data_dict['name']        = 'dbt_api_id.key'
+    data_dict['value']       = _lm_id
+
+    # Convert to JSON string
+    data = json.dumps(data_dict)
+
+    # Obtain response
+    response_dict = LM_POST(_lm_id, _lm_key, _lm_account, resource_path, query_params, data)
+    body = json.loads(response_dict['body'])
+    code = response_dict['code']
+
+    if(code != 200):
+        print(f'Failed to post device properties, check credentials')
+
+    # Build data dictionary to be converted to JSON string
+    data_dict                = {}
+    data_dict['inheritList'] = []
+    data_dict['type']        = 'custom'
+    data_dict['name']        = 'dbt_api_key.key'
+    data_dict['value']       = _lm_key
+
+    # Convert to JSON string
+    data = json.dumps(data_dict)
+
+   # Obtain response
+    response_dict = LM_POST(_lm_id, _lm_key, _lm_account, resource_path, query_params, data)
+    body = json.loads(response_dict['body'])
+    code = response_dict['code']
+
+    if(code != 200):
+        print(f'Failed to post device properties, check credentials')
+
+    return 0
 
 def SUBGROUP_POSTER(_lm_id, _lm_key, _lm_account, _group_id, _group_full_path):
     # Build HTTP query
