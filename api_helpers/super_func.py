@@ -1,7 +1,6 @@
 from api_helpers.lm_api import *
 
 # These functions occur a logical level higher than those in lm_api
-
 def SUBGROUP_GETTER_ID(_lm_id, _lm_key, _lm_account, _group_id):
     # GETS subgroup and returns full path
     # Build HTTP query
@@ -116,6 +115,28 @@ def SUBGROUP_PROPS(_lm_id, _lm_key, _lm_account, _group_id):
         print(f'Failed to post device properties, check credentials')
 
     return 0
+
+def PROPERTYSOURCE_POSTER(_lm_id, _lm_key, _lm_account, _filepath):
+    # Build HTTP query
+    resource_path = '/setting/logicmodules/importfile'
+    query_params  = '?type=propertyrules'
+
+    file = open(_filepath, 'r')
+    json = file.read()
+
+    # The file name is the business after the last /
+    file_name = _filepath.split('/')[-1]
+    print(file_name)
+
+    data = '''--XXX
+Content-Disposition: form-data; name="file"; filename="''' + file_name + '''"
+Content-Type: application/json
+''' + json + '''
+--XXX--'''
+
+    return_dict = PROP_POST(_lm_id, _lm_key, _lm_account, resource_path, query_params, data)
+
+    return return_dict
 
 def SUBGROUP_POSTER(_lm_id, _lm_key, _lm_account, _group_id, _group_full_path):
     # Build HTTP query

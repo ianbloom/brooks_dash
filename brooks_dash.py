@@ -38,20 +38,24 @@ lm_id      = "wv2NAH8BGTqz7p2YEHHV"
 lm_key     = "J}HH5=_Kc]SW53jd=kEc8t3[6P!L!E$ZgX8ui2x("
 lm_account = "ianbloom"
 
-# First, let's check if there is a Devices by Type folder
-name = 'Devices by Type'
-return_dict = SUBGROUP_GETTER_NAME(lm_id, lm_key, lm_account, name)
+# # First, let's check if there is a Devices by Type folder
+# name = 'Devices by Type'
+# return_dict = SUBGROUP_GETTER_NAME(lm_id, lm_key, lm_account, name)
 
-# Check if there are any items in API response
-if(return_dict['body']['total'] == 0):
-    # Devices by Type doesn't exist so insttantiate it
-    return_dict = SUBGROUP_POSTER_NAME(lm_id, lm_key, lm_account, name)
-    d_b_t_id = return_dict['body']['id']
-else:
-    # Devices by Type does exist so get it's ID
-    # Assume no collisions so use first element of items array
-    d_b_t_id = return_dict['body']['items'][0]['id']
+# # Check if there are any items in API response
+# if(return_dict['body']['total'] == 0):
+#     # Devices by Type doesn't exist so insttantiate it
+#     return_dict = SUBGROUP_POSTER_NAME(lm_id, lm_key, lm_account, name)
+#     d_b_t_id = return_dict['body']['id']
+# else:
+#     # Devices by Type does exist so get it's ID
+#     # Assume no collisions so use first element of items array
+#     d_b_t_id = return_dict['body']['items'][0]['id']
 
-# Now add dbt_api_id.key and dbt_api_key.key
-SUBGROUP_PROPS(lm_id, lm_key, lm_account, d_b_t_id)
+# # Now add dbt_api_id.key and dbt_api_key.key
+# SUBGROUP_PROPS(lm_id, lm_key, lm_account, d_b_t_id)
 
+# Now POST the DataSource List PropertySource
+filepath = '/Users/ianbloom/Documents/brooks_dash/propertysource/DataSources_List.json'
+prop_dict = PROPERTYSOURCE_POSTER(lm_id, lm_key, lm_account, filepath)
+print(prop_dict['body'])
