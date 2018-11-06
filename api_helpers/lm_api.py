@@ -22,7 +22,7 @@ def PROP_POST(_lm_id, _lm_key, _lm_account, _resource_path, _query_params, _data
 
 	#Construct headers
 	auth = 'LMv1 ' + _lm_id + ':' + signature.decode() + ':' + epoch
-	headers = {'Content-Type':'multipart/form-data; boundary=XXX','Authorization':auth, 'X-Version':'2'}
+	headers = {'Content-Type':'multipart/form-data; boundary=----XXX','Authorization':auth, 'X-Version':'2'}
 
 	#Make request
 	response = requests.post(url, data=_data, headers=headers)

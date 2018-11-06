@@ -123,18 +123,38 @@ def PROPERTYSOURCE_POSTER(_lm_id, _lm_key, _lm_account, _filepath):
 
     file = open(_filepath, 'r')
     json = file.read()
+    # Close file after reading
+    file.close()
 
     # The file name is the business after the last /
     file_name = _filepath.split('/')[-1]
     print(file_name)
 
-    data = '''--XXX
+    data = '''------XXX
 Content-Disposition: form-data; name="file"; filename="''' + file_name + '''"
 Content-Type: application/json
 ''' + json + '''
---XXX--'''
+------XXX--'''
 
+    print(data)
     return_dict = PROP_POST(_lm_id, _lm_key, _lm_account, resource_path, query_params, data)
+
+    return return_dict
+
+def PROPERTYSOURCE_IMPORTER(_lm_id, _lm_key, _lm_account, _lm_locator):
+    # Build HTTP query
+    resource_path = '/setting/registry/property_rule'
+    query_params  = ''
+
+    data_dict = {}
+    data_dict['locator'] = _lm_locator
+    data_dict['lmLocator'] = _lm_locator
+    data_dict['id'] = _lm_locator
+
+    data = json.dumps(data_dict)
+
+    print(data)
+    return_dict = LM_POST(_lm_id, _lm_key, _lm_account, resource_path, query_params, data)
 
     return return_dict
 
